@@ -699,7 +699,7 @@ exchange :: (HasCallStack, PrimMonad m, MVector v a) => v (PrimState m) a -> Int
 exchange v i x = checkIndex Bounds i (length v) $ unsafeExchange v i x
 
 -- | Yield the element at the given position. No bounds checks are performed.
-unsafeRead :: (PrimMonad m, MVector v a) => v (PrimState m) a -> Int -> m a
+unsafeRead :: (HasCallStack, PrimMonad m, MVector v a) => v (PrimState m) a -> Int -> m a
 {-# INLINE unsafeRead #-}
 -- See NOTE: [Strict indexing] in D.V.Generic
 unsafeRead v !i = checkIndex Unsafe i (length v)
@@ -707,7 +707,7 @@ unsafeRead v !i = checkIndex Unsafe i (length v)
                 $ basicUnsafeRead v i
 
 -- | Replace the element at the given position. No bounds checks are performed.
-unsafeWrite :: (PrimMonad m, MVector v a) => v (PrimState m) a -> Int -> a -> m ()
+unsafeWrite :: (HasCallStack, PrimMonad m, MVector v a) => v (PrimState m) a -> Int -> a -> m ()
 {-# INLINE unsafeWrite #-}
 -- See NOTE: [Strict indexing] in D.V.Generic
 unsafeWrite v !i x = checkIndex Unsafe i (length v)
@@ -715,7 +715,7 @@ unsafeWrite v !i x = checkIndex Unsafe i (length v)
                    $ basicUnsafeWrite v i x
 
 -- | Modify the element at the given position. No bounds checks are performed.
-unsafeModify :: (PrimMonad m, MVector v a) => v (PrimState m) a -> (a -> a) -> Int -> m ()
+unsafeModify :: (HasCallStack, PrimMonad m, MVector v a) => v (PrimState m) a -> (a -> a) -> Int -> m ()
 {-# INLINE unsafeModify #-}
 -- See NOTE: [Strict indexing] in D.V.Generic
 unsafeModify v f !i = checkIndex Unsafe i (length v)
@@ -727,14 +727,14 @@ unsafeModify v f !i = checkIndex Unsafe i (length v)
 -- function. No bounds checks are performed.
 --
 -- @since 0.12.3.0
-unsafeModifyM :: (PrimMonad m, MVector v a) => v (PrimState m) a -> (a -> m a) -> Int -> m ()
+unsafeModifyM :: (HasCallStack, PrimMonad m, MVector v a) => v (PrimState m) a -> (a -> m a) -> Int -> m ()
 {-# INLINE unsafeModifyM #-}
 -- See NOTE: [Strict indexing] in D.V.Generic
 unsafeModifyM v f !i = checkIndex Unsafe i (length v)
                      $ stToPrim . basicUnsafeWrite v i =<< f =<< stToPrim (basicUnsafeRead v i)
 
 -- | Swap the elements at the given positions. No bounds checks are performed.
-unsafeSwap :: (PrimMonad m, MVector v a) => v (PrimState m) a -> Int -> Int -> m ()
+unsafeSwap :: (HasCallStack, PrimMonad m, MVector v a) => v (PrimState m) a -> Int -> Int -> m ()
 {-# INLINE unsafeSwap #-}
 unsafeSwap v i j = checkIndex Unsafe i (length v)
                  $ checkIndex Unsafe j (length v)

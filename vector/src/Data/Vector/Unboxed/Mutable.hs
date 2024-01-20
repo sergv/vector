@@ -72,6 +72,8 @@ import Control.Monad.Primitive
 
 import Prelude ( Ord, Bool, Int, Maybe )
 
+import GHC.Stack
+
 -- don't import an unused Data.Vector.Internal.Check
 #define NOT_VECTOR_MODULE
 #include "vector.h"
@@ -352,17 +354,17 @@ exchange :: (PrimMonad m, Unbox a) => MVector (PrimState m) a -> Int -> a -> m a
 exchange = G.exchange
 
 -- | Yield the element at the given position. No bounds checks are performed.
-unsafeRead :: (PrimMonad m, Unbox a) => MVector (PrimState m) a -> Int -> m a
+unsafeRead :: (HasCallStack, PrimMonad m, Unbox a) => MVector (PrimState m) a -> Int -> m a
 {-# INLINE unsafeRead #-}
 unsafeRead = G.unsafeRead
 
 -- | Replace the element at the given position. No bounds checks are performed.
-unsafeWrite :: (PrimMonad m, Unbox a) =>  MVector (PrimState m) a -> Int -> a -> m ()
+unsafeWrite :: (HasCallStack, PrimMonad m, Unbox a) =>  MVector (PrimState m) a -> Int -> a -> m ()
 {-# INLINE unsafeWrite #-}
 unsafeWrite = G.unsafeWrite
 
 -- | Modify the element at the given position. No bounds checks are performed.
-unsafeModify :: (PrimMonad m, Unbox a) => MVector (PrimState m) a -> (a -> a) -> Int -> m ()
+unsafeModify :: (HasCallStack, PrimMonad m, Unbox a) => MVector (PrimState m) a -> (a -> a) -> Int -> m ()
 {-# INLINE unsafeModify #-}
 unsafeModify = G.unsafeModify
 
